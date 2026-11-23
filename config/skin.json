@@ -1,0 +1,136 @@
+{
+  "$schema": "./skin.schema.json",
+  "enabled": true,
+  "port": 9335,
+  "marker": "mint",
+  "palette": {
+    "surface": "rgba(240, 252, 246, 0.42)",
+    "sidebar": "rgba(244, 252, 248, 0.48)",
+    "rail": "rgba(238, 250, 244, 0.72)",
+    "chrome": "rgba(240, 250, 245, 0.0)",
+    "ink": "#172a21",
+    "inkSoft": "rgba(23, 42, 33, 0.62)",
+    "border": "rgba(74, 140, 110, 0.2)",
+    "borderStrong": "rgba(74, 140, 110, 0.34)",
+    "accent": "#47a377",
+    "accentStrong": "#2f8a63",
+    "accentSoft": "#e6f7ee",
+    "accentSoft2": "#d4f0e2",
+    "radius": "18px"
+  },
+  "background": {
+    "mode": "rotate",
+    "rotateMs": 60000,
+    "picker": true,
+    "list": [
+      "assets/backgrounds/bg-01.webp",
+      "assets/backgrounds/bg-02.webp",
+      "assets/backgrounds/bg-03.webp",
+      "assets/backgrounds/bg-04.webp",
+      "assets/backgrounds/bg-05.webp",
+      "assets/backgrounds/bg-06.webp",
+      "assets/backgrounds/bg-07.webp",
+      "assets/backgrounds/bg-08.webp",
+      "assets/backgrounds/bg-09.webp",
+      "assets/backgrounds/bg-10.webp",
+      "assets/backgrounds/bg-11.webp",
+      "assets/backgrounds/bg-12.webp",
+      "assets/backgrounds/bg-13.webp",
+      "assets/backgrounds/bg-14.webp",
+      "assets/backgrounds/bg-15.webp",
+      "assets/backgrounds/bg-16.webp",
+      "assets/backgrounds/bg-17.webp",
+      "assets/backgrounds/bg-18.webp"
+    ],
+    "asset": "assets/backgrounds/bg-01.webp",
+    "opacity": 1,
+    "position": "center 18%"
+  },
+  "characters": [],
+  "chibi": {
+    "enabled": true,
+    "asset": "assets/chibi/chibi-happy.webp",
+    "width": "52px",
+    "left": "0px",
+    "bottom": "116px",
+    "opacity": 1
+  },
+  "assistant": {
+    "enabled": true,
+    "name": "Sol",
+    "mode": "bubble",
+    "visible": true,
+    "controls": true,
+    "size": "30vh",
+    "right": "16px",
+    "bottom": "104px",
+    "opacity": 1,
+    "doneMs": 2500,
+    "smileMs": 5000,
+    "quiescenceMs": 1200,
+    "interactive": {
+      "enabled": true,
+      "click": true,
+      "drag": true,
+      "hover": true,
+      "idle": true
+    },
+    "captionMs": 2600,
+    "idleMs": 60000,
+    "greet": true,
+    "lines": {
+      "greet": [
+        "早上好呀",
+        "下午好～",
+        "晚上好",
+        "这么晚还在呀"
+      ],
+      "click": [
+        "在呢在呢",
+        "有什么我可以帮你的吗",
+        "你又戳我～",
+        "我在认真看着你哦"
+      ],
+      "pet": {
+        "3": "唔…好痒",
+        "10": "今天也要加油哦",
+        "25": "再摸就要收费啦"
+      }
+    },
+    "signals": {
+      "sendLabel": "发送",
+      "stopLabel": "停止"
+    },
+    "body": "assets/sol/body.webp",
+    "states": {
+      "idle": {
+        "emote": "assets/sol/emote-idle.webp",
+        "animation": "breathe"
+      },
+      "listening": {
+        "emote": "assets/sol/emote-listening.webp",
+        "animation": "breathe-fast"
+      },
+      "thinking": {
+        "emote": "assets/sol/emote-thinking.webp",
+        "animation": "sway"
+      },
+      "done": {
+        "emote": "assets/sol/emote-done.webp",
+        "animation": "bounce"
+      },
+      "error": {
+        "emote": "assets/sol/emote-error.webp",
+        "animation": "shake"
+      },
+      "hug": {
+        "emote": "assets/sol/emote-hug.webp",
+        "animation": "breathe-fast"
+      }
+    }
+  },
+  "codexBrowser": {
+    "safe": false,
+    "opaqueHost": true
+  }
+}

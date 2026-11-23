@@ -1,0 +1,92 @@
+[
+  {
+    "id": "bg-01",
+    "name": "翡翠玫瑰宫",
+    "asset": "assets/backgrounds/bg-01.webp"
+  },
+  {
+    "id": "bg-02",
+    "name": "霓虹双星",
+    "asset": "assets/backgrounds/bg-02.webp"
+  },
+  {
+    "id": "bg-03",
+    "name": "秋日童话",
+    "asset": "assets/backgrounds/bg-03.webp"
+  },
+  {
+    "id": "bg-04",
+    "name": "樱花序曲",
+    "asset": "assets/backgrounds/bg-04.webp"
+  },
+  {
+    "id": "bg-05",
+    "name": "薄荷花园中的双少女幻想曲",
+    "asset": "assets/backgrounds/bg-05.webp"
+  },
+  {
+    "id": "bg-06",
+    "name": "薄荷幻想庭院中的双星",
+    "asset": "assets/backgrounds/bg-06.webp"
+  },
+  {
+    "id": "bg-07",
+    "name": "窗畔薄荷双姝与梦幻城堡",
+    "asset": "assets/backgrounds/bg-07.webp"
+  },
+  {
+    "id": "bg-08",
+    "name": "樱花树下的温暖校园时光",
+    "asset": "assets/backgrounds/bg-08.webp"
+  },
+  {
+    "id": "bg-09",
+    "name": "雨夜霓虹下的姐妹羁绊",
+    "asset": "assets/backgrounds/bg-09.webp"
+  },
+  {
+    "id": "bg-10",
+    "name": "午后星光与花瓣的梦境",
+    "asset": "assets/backgrounds/bg-10.webp"
+  },
+  {
+    "id": "bg-11",
+    "name": "星环花庭与飞舞少女",
+    "asset": "assets/backgrounds/bg-11.webp"
+  },
+  {
+    "id": "bg-12",
+    "name": "暮色蒸汽飞艇上的星辉冒险",
+    "asset": "assets/backgrounds/bg-12.webp"
+  },
+  {
+    "id": "bg-13",
+    "name": "雪夜花灯下的姐妹与白兔",
+    "asset": "assets/backgrounds/bg-13.webp"
+  },
+  {
+    "id": "bg-14",
+    "name": "月下哥特玫瑰庭园",
+    "asset": "assets/backgrounds/bg-14.webp"
+  },
+  {
+    "id": "bg-15",
+    "name": "星空湖畔的温暖露营夜",
+    "asset": "assets/backgrounds/bg-15.webp"
+  },
+  {
+    "id": "bg-16",
+    "name": "极光下的冬夜相依",
+    "asset": "assets/backgrounds/bg-16.webp"
+  },
+  {
+    "id": "bg-17",
+    "name": "阳光花园里的姐妹茶会",
+    "asset": "assets/backgrounds/bg-17.webp"
+  },
+  {
+    "id": "bg-18",
+    "name": "山坡花影下的午后阅读",
+    "asset": "assets/backgrounds/bg-18.webp"
+  }
+]

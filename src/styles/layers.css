@@ -1,0 +1,817 @@
+/* ============================================================================
+   Decoration layers.
+     #ccs-skin-layers  z-index 0  -> wallpaper + back characters (below app)
+     #ccs-skin-front   z-index 2  -> foreground overlays (sidebar chibi)
+   #root is lifted to z-index 1 by theme.css, so app surfaces sit in between and
+   stay fully interactive: every decoration layer is pointer-events:none.
+   ========================================================================== */
+
+#ccs-skin-layers,
+#ccs-skin-front {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none !important;
+  contain: strict;
+}
+
+#ccs-skin-layers {
+  z-index: 0;
+}
+
+#ccs-skin-front {
+  z-index: 2;
+}
+
+#ccs-skin-layers .ccs-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transform: translateZ(0);
+  filter: saturate(1.14) contrast(1.04);
+}
+
+/* Soft white halo keeps the middle of the canvas readable over busy artwork. */
+#ccs-skin-layers .ccs-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 88% at 50% 26%, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08) 56%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(230, 248, 240, 0.1));
+}
+
+.ccs-char {
+  position: absolute;
+  bottom: 0;
+  width: auto;
+  max-width: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: saturate(1.12) contrast(1.04) drop-shadow(0 10px 22px rgba(62, 128, 100, 0.2));
+}
+
+/* Back characters sit under frosted panels: multiply keeps them from turning
+   chalky, and the slight fade blends their edges into the wallpaper. */
+#ccs-skin-layers .ccs-char {
+  mix-blend-mode: multiply;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 40%, rgba(0, 0, 0, 0.55) 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 40%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+#ccs-skin-front .ccs-char-right {
+  -webkit-mask-image: linear-gradient(270deg, rgba(0, 0, 0, 1) 42%, rgba(0, 0, 0, 0.3) 86%, transparent 100%);
+  mask-image: linear-gradient(270deg, rgba(0, 0, 0, 1) 42%, rgba(0, 0, 0, 0.3) 86%, transparent 100%);
+}
+
+.ccs-chibi {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 6px 14px rgba(62, 128, 100, 0.22));
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto !important;
+}
+
+.ccs-chibi img {
+  display: block;
+  width: 100%;
+}
+
+.ccs-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   Sol 鈥?the desktop assistant (right corner).
+   Two modes:
+     bubble -> full-body sprite stays, expressions pop up in a round bubble
+     pose   -> the chibi expression itself is the assistant body
+   ========================================================================== */
+
+#ccs-assistant {
+  position: fixed;
+  right: var(--ccs-sol-right, 16px);
+  bottom: var(--ccs-sol-bottom, 104px);
+  height: var(--ccs-sol-size, 30vh);
+  pointer-events: none !important;
+  opacity: var(--ccs-sol-opacity, 1);
+  filter: drop-shadow(0 14px 26px rgba(47, 138, 99, 0.18));
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+#ccs-assistant .ccs-sol-body {
+  display: block;
+  height: 100%;
+  width: calc(var(--ccs-sol-size, 30vh) * 0.42);
+  object-fit: contain;
+  object-position: center bottom;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 88%, rgba(0, 0, 0, 0.55) 100%);
+  mask-image: linear-gradient(180deg, #000 88%, rgba(0, 0, 0, 0.55) 100%);
+  animation: ccs-sol-breathe 4s ease-in-out infinite;
+}
+
+/* --- state motions -------------------------------------------------------- */
+#ccs-assistant[data-ccs-anim='breathe'] .ccs-sol-body {
+  animation: ccs-sol-breathe 4s ease-in-out infinite;
+}
+#ccs-assistant[data-ccs-anim='breathe-fast'] .ccs-sol-body {
+  animation: ccs-sol-breathe 2.6s ease-in-out infinite;
+}
+#ccs-assistant[data-ccs-anim='sway'] .ccs-sol-body {
+  animation: ccs-sol-sway 3.4s ease-in-out infinite;
+}
+#ccs-assistant[data-ccs-anim='bounce'] .ccs-sol-body {
+  animation: ccs-sol-bounce 0.52s cubic-bezier(0.3, 1.4, 0.5, 1) 2;
+}
+#ccs-assistant[data-ccs-anim='shake'] .ccs-sol-body {
+  animation: ccs-sol-shake 0.42s ease-in-out 2;
+}
+
+@keyframes ccs-sol-breathe {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.004);
+  }
+}
+
+@keyframes ccs-sol-sway {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  35% {
+    transform: rotate(-1.4deg) translateY(-3px);
+  }
+  70% {
+    transform: rotate(1.2deg) translateY(-1px);
+  }
+}
+
+@keyframes ccs-sol-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-16px) scale(1.03);
+  }
+}
+
+@keyframes ccs-sol-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px) rotate(-1deg);
+  }
+  75% {
+    transform: translateX(3px) rotate(1deg);
+  }
+}
+
+/* --- expression bubble ---------------------------------------------------- */
+#ccs-assistant .ccs-sol-emotes {
+  position: absolute;
+  right: 36%;
+  bottom: 92%;
+  width: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid var(--ccs-border-strong, rgba(74, 140, 110, 0.34));
+  box-shadow: 0 10px 24px rgba(47, 138, 99, 0.22);
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.82) translateY(8px);
+  transform-origin: 88% 100%;
+  transition:
+    opacity 0.16s ease,
+    transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.35),
+    box-shadow 0.3s ease;
+  display: block;
+}
+
+/* small tail connecting the bubble to Sol's head */
+#ccs-assistant::after {
+  content: '';
+  position: absolute;
+  right: 53%;
+  bottom: 86%;
+  width: 7%;
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.96);
+  border-right: 2px solid var(--ccs-border-strong, rgba(74, 140, 110, 0.34));
+  border-bottom: 2px solid var(--ccs-border-strong, rgba(74, 140, 110, 0.34));
+  border-radius: 0 0 5px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.16s ease;
+  pointer-events: none;
+}
+
+#ccs-assistant[data-ccs-state='thinking']::after,
+#ccs-assistant[data-ccs-state='done']::after,
+#ccs-assistant[data-ccs-state='error']::after {
+  opacity: 1;
+}
+
+#ccs-assistant .ccs-sol-emote {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.16s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+#ccs-assistant[data-ccs-state='thinking'] .ccs-sol-emotes,
+#ccs-assistant[data-ccs-state='done'] .ccs-sol-emotes,
+#ccs-assistant[data-ccs-state='error'] .ccs-sol-emotes {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+#ccs-assistant[data-ccs-state='thinking'] .ccs-sol-emote[data-state='thinking'],
+#ccs-assistant[data-ccs-state='done'] .ccs-sol-emote[data-state='done'],
+#ccs-assistant[data-ccs-state='error'] .ccs-sol-emote[data-state='error'],
+#ccs-assistant[data-ccs-state='listening'] .ccs-sol-emote[data-state='listening'],
+#ccs-assistant[data-ccs-state='idle'] .ccs-sol-emote[data-state='idle'] {
+  opacity: 1;
+}
+
+/* --- click reactions (independent of the chat-state machine) -------------- */
+#ccs-assistant[data-ccs-react] .ccs-sol-emotes {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  border-color: var(--ccs-accent, #47a377);
+  box-shadow:
+    0 10px 24px rgba(47, 138, 99, 0.22),
+    0 0 0 5px rgba(71, 163, 119, 0.14);
+}
+
+#ccs-assistant[data-ccs-react='done'] .ccs-sol-emote[data-state='done'],
+#ccs-assistant[data-ccs-react='hug'] .ccs-sol-emote[data-state='hug'],
+#ccs-assistant[data-ccs-react='idle'] .ccs-sol-emote[data-state='idle'],
+#ccs-assistant[data-ccs-react='listening'] .ccs-sol-emote[data-state='listening'],
+#ccs-assistant[data-ccs-react='thinking'] .ccs-sol-emote[data-state='thinking'],
+#ccs-assistant[data-ccs-react='error'] .ccs-sol-emote[data-state='error'] {
+  opacity: 1;
+}
+
+/* done: golden pulse around the bubble */
+#ccs-assistant[data-ccs-state='done'] .ccs-sol-emotes {
+  border-color: rgba(226, 176, 74, 0.75);
+  box-shadow:
+    0 10px 24px rgba(47, 138, 99, 0.22),
+    0 0 0 6px rgba(226, 176, 74, 0.16);
+  animation: ccs-sol-pop 0.6s ease-in-out 2;
+}
+
+@keyframes ccs-sol-pop {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.06) translateY(-2px);
+  }
+}
+
+/* --- thinking dots -------------------------------------------------------- */
+.ccs-sol-dots {
+  position: absolute;
+  right: 30%;
+  bottom: 92%;
+  width: 26%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.9));
+}
+
+#ccs-assistant[data-ccs-state='thinking'] .ccs-sol-dots {
+  opacity: 1;
+}
+
+.ccs-sol-dots i {
+  width: 24%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--ccs-accent-strong, #2f8a63);
+  opacity: 0.55;
+  animation: ccs-sol-dot 1.1s ease-in-out infinite;
+}
+
+.ccs-sol-dots i:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.ccs-sol-dots i:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+@keyframes ccs-sol-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  40% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* --- pose mode: the expression *is* the assistant ------------------------- */
+#ccs-assistant[data-ccs-mode='pose'] .ccs-sol-body {
+  display: none;
+}
+
+#ccs-assistant[data-ccs-mode='pose'] .ccs-sol-emotes {
+  position: static;
+  width: auto;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+#ccs-assistant[data-ccs-mode='pose'] .ccs-sol-emote {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  inset: auto 0 0 auto;
+}
+
+#ccs-assistant[data-ccs-mode='pose'] .ccs-sol-emotes {
+  animation: ccs-sol-breathe 4s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+#ccs-assistant[data-ccs-mode='pose'] .ccs-sol-dots {
+  display: none;
+}
+
+#ccs-assistant[data-ccs-mode='pose']::after {
+  display: none;
+}
+
+/* --- visibility toggle ---------------------------------------------------- */
+#ccs-sol-toggle {
+  position: fixed;
+  right: var(--ccs-sol-right, 16px);
+  bottom: calc(var(--ccs-sol-bottom, 104px) - 42px);
+  z-index: 3;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--ccs-border, rgba(74, 140, 110, 0.2));
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ccs-accent-strong, #2f8a63);
+  box-shadow: 0 4px 12px rgba(47, 138, 99, 0.16);
+  cursor: pointer;
+  pointer-events: auto !important;
+  opacity: 0.5;
+  transition: opacity 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+
+#ccs-sol-toggle:hover,
+#ccs-sol-toggle:focus-visible {
+  opacity: 1;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.96);
+  outline: none;
+  border-color: var(--ccs-accent, #47a377);
+}
+
+#ccs-sol-toggle svg {
+  width: 17px;
+  height: 17px;
+}
+
+#ccs-sol-toggle .ccs-sol-slash {
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+
+html[data-ccs-sol='off'] #ccs-sol-toggle {
+  opacity: 0.72;
+}
+
+html[data-ccs-sol='off'] #ccs-sol-toggle .ccs-sol-slash {
+  opacity: 1;
+}
+
+html[data-ccs-sol='off'] #ccs-assistant {
+  opacity: 0 !important;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.96);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0.22s;
+}
+
+/* --- Sol interactions ----------------------------------------------------- */
+#ccs-assistant {
+  --ccs-sol-shift-x: 0px;
+  --ccs-sol-shift-y: 0px;
+  translate: var(--ccs-sol-shift-x) var(--ccs-sol-shift-y);
+  scale: 1;
+  transition: translate 0.22s ease, scale 0.22s ease, opacity 0.22s ease;
+}
+
+/* Transparent hit area over the sprite only (never the bubble), so the rest of
+   the window keeps receiving clicks. */
+#ccs-assistant .ccs-sol-hit {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 78%;
+  pointer-events: auto !important;
+  cursor: grab;
+  background: transparent;
+  border-radius: 42% 42% 14% 14%;
+}
+
+#ccs-assistant[data-ccs-hover='grabbing'] .ccs-sol-hit {
+  cursor: grabbing;
+}
+
+html[data-ccs-sol='off'] #ccs-assistant .ccs-sol-hit {
+  pointer-events: none !important;
+}
+
+#ccs-assistant[data-ccs-hover] {
+  --ccs-sol-shift-y: -2px;
+}
+
+/* Step aside while the background picker is open. */
+#ccs-assistant[data-ccs-shifted='on'] {
+  --ccs-sol-shift-x: calc(-1 * min(360px, 100vw - 320px));
+  scale: 0.92;
+  opacity: 0.32;
+}
+
+#ccs-assistant[data-ccs-idle='on'] .ccs-sol-body {
+  animation: ccs-sol-sway 3s ease-in-out;
+}
+
+#ccs-assistant .ccs-sol-caption {
+  position: absolute;
+  right: 34%;
+  bottom: 150%;
+  width: max-content;
+  max-width: 190px;
+  padding: 7px 12px 8px;
+  border-radius: 14px;
+  border: 1px solid var(--ccs-border, rgba(74, 140, 110, 0.2));
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ccs-ink, #172a21);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: left;
+  white-space: pre-wrap;
+  box-shadow: 0 10px 22px rgba(47, 138, 99, 0.18);
+  pointer-events: none;
+  opacity: 0;
+  translate: 0 4px;
+  transition: opacity 0.2s ease, translate 0.2s ease;
+  z-index: 3;
+}
+
+#ccs-assistant .ccs-sol-caption[hidden] {
+  display: none;
+}
+
+#ccs-assistant .ccs-sol-caption.is-on {
+  opacity: 1;
+  translate: 0 0;
+}
+
+#ccs-assistant .ccs-sol-hearts {
+  position: absolute;
+  right: 40%;
+  bottom: 94%;
+  width: 44%;
+  height: 34%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+
+#ccs-assistant .ccs-sol-hearts.is-on {
+  opacity: 1;
+}
+
+#ccs-assistant .ccs-sol-hearts i {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--ccs-accent, #47a377);
+  opacity: 0;
+}
+
+#ccs-assistant .ccs-sol-hearts i::before {
+  content: '♥';
+}
+
+#ccs-assistant .ccs-sol-hearts.is-on i {
+  animation: ccs-sol-heart 1.2s ease-out forwards;
+}
+
+#ccs-assistant .ccs-sol-hearts i:nth-child(1) {
+  --dx: -16px;
+}
+
+#ccs-assistant .ccs-sol-hearts i:nth-child(2) {
+  --dx: 0px;
+  animation-delay: 0.12s;
+}
+
+#ccs-assistant .ccs-sol-hearts i:nth-child(3) {
+  --dx: 15px;
+  animation-delay: 0.22s;
+}
+
+@keyframes ccs-sol-heart {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx, 0px)), -36px) scale(1.05);
+  }
+}
+
+/* --- background picker ---------------------------------------------------- */
+#ccs-bg-toggle {
+  position: fixed;
+  right: calc(var(--ccs-sol-right, 16px) + 38px);
+  bottom: calc(var(--ccs-sol-bottom, 104px) - 42px);
+  z-index: 3;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--ccs-border, rgba(74, 140, 110, 0.2));
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ccs-accent-strong, #2f8a63);
+  box-shadow: 0 4px 12px rgba(47, 138, 99, 0.16);
+  cursor: pointer;
+  pointer-events: auto !important;
+  opacity: 0.5;
+  transition: opacity 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+
+#ccs-bg-toggle:hover,
+#ccs-bg-toggle:focus-visible,
+#ccs-bg-toggle.is-open {
+  opacity: 1;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.96);
+  outline: none;
+  border-color: var(--ccs-accent, #47a377);
+}
+
+#ccs-bg-toggle svg {
+  width: 17px;
+  height: 17px;
+}
+
+#ccs-bg-panel {
+  position: fixed;
+  right: var(--ccs-sol-right, 16px);
+  bottom: calc(var(--ccs-sol-bottom, 104px) + 36px);
+  z-index: 4;
+  width: min(360px, calc(100vw - 48px));
+  max-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--ccs-radius, 18px);
+  border: 1px solid var(--ccs-border-strong, rgba(74, 140, 110, 0.34));
+  background: rgba(255, 255, 255, 0.93);
+  -webkit-backdrop-filter: blur(10px) saturate(1.05);
+  backdrop-filter: blur(10px) saturate(1.05);
+  box-shadow: 0 18px 44px rgba(31, 86, 64, 0.22);
+  color: var(--ccs-ink, #172a21);
+  pointer-events: auto !important;
+  overflow: hidden;
+  animation: ccs-bg-in 0.18s ease both;
+}
+
+#ccs-bg-panel[hidden] {
+  display: none !important;
+}
+
+@keyframes ccs-bg-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ccs-bg-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ccs-bg-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.ccs-bg-counter {
+  font-size: 11px;
+  color: var(--ccs-ink-soft, rgba(23, 42, 33, 0.62));
+  font-variant-numeric: tabular-nums;
+}
+
+.ccs-bg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+:is(.ccs-bg-item, .ccs-bg-item-alt) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  pointer-events: auto !important;
+}
+
+:is(.ccs-bg-item, .ccs-bg-item-alt):hover {
+  background: rgba(230, 247, 238, 0.72);
+}
+
+:is(.ccs-bg-item, .ccs-bg-item-alt).is-active {
+  border-color: var(--ccs-accent, #47a377);
+  background: rgba(230, 247, 238, 0.9);
+  box-shadow: 0 0 0 2px rgba(71, 163, 119, 0.16);
+}
+
+.ccs-bg-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: inset 0 0 0 1px rgba(23, 42, 33, 0.06);
+}
+
+.ccs-bg-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--ccs-ink, #172a21);
+}
+
+.ccs-bg-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ccs-border, rgba(74, 140, 110, 0.2));
+}
+
+.ccs-bg-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ccs-ink, #172a21);
+  font-size: 11px;
+  cursor: pointer;
+  pointer-events: auto !important;
+}
+
+.ccs-bg-switch {
+  display: inline-block;
+  position: relative;
+  width: 30px;
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(23, 42, 33, 0.18);
+  transition: background 0.18s ease;
+}
+
+.ccs-bg-switch i {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.18s ease;
+}
+
+.ccs-bg-play.is-on .ccs-bg-switch {
+  background: var(--ccs-accent, #47a377);
+}
+
+.ccs-bg-play.is-on .ccs-bg-switch i {
+  transform: translateX(14px);
+}
+
+.ccs-bg-interval {
+  padding: 3px 6px;
+  border: 1px solid var(--ccs-border, rgba(74, 140, 110, 0.2));
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ccs-ink, #172a21);
+  font-size: 11px;
+}
+
+@media (max-width: 900px) {
+  .ccs-bg-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --- reduced motion ------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #ccs-assistant .ccs-sol-body,
+  #ccs-assistant[data-ccs-mode='pose'] .ccs-sol-emotes,
+  #ccs-assistant[data-ccs-state='done'] .ccs-sol-emotes,
+  .ccs-sol-dots i {
+    animation: none !important;
+  }
+  #ccs-assistant .ccs-sol-emotes,
+  #ccs-assistant .ccs-sol-emote {
+    transition: opacity 0.16s linear;
+  }
+  #ccs-bg-panel {
+    animation: none;
+  }
+  #ccs-assistant .ccs-sol-hearts.is-on i {
+    animation: none !important;
+    opacity: 0.9;
+  }
+  #ccs-assistant {
+    transition: none;
+  }
+}
+

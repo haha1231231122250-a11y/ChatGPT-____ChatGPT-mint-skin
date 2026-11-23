@@ -1,0 +1,138 @@
+/* ============================================================================
+   ChatGPT "mint" skin — design-token overrides.
+   Anchors are the app's own design tokens plus a handful of stable structural
+   attributes (id/role/class-prefix). Hashed Tailwind classes are never used.
+   Mounted only while html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) is present.
+
+   Notes:
+   - The app declares many tokens inline on <html>, so token overrides carry
+     !important to win the cascade reliably.
+   - Keep this file UTF-8 **without BOM**: PowerShell 5.1 Set-Content can add a
+     BOM and mangle non-ASCII comments, so edit it with an editor that writes
+     plain UTF-8.
+   ========================================================================== */
+
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) {
+  color-scheme: light;
+
+  /* --- surfaces: translucent so the wallpaper reads through ----------------- */
+  --app-color-background-surface: var(--ccs-surface) !important;
+  --color-token-main-surface-primary: var(--ccs-surface) !important;
+  --color-token-side-bar-background: var(--ccs-sidebar) !important;
+  --wallpaper-chrome-fill: var(--ccs-chrome) !important;
+  --app-shell-sidebar-docked-background: transparent !important;
+
+  /* --- lines + ink --------------------------------------------------------- */
+  --color-token-border-default: var(--ccs-border) !important;
+  --color-token-border-heavy: var(--ccs-border-strong) !important;
+  --color-text-primary: var(--ccs-ink) !important;
+  --color-text-primary-surface: var(--ccs-ink) !important;
+  --color-text-primary-soft-alt: var(--ccs-ink) !important;
+  --color-token-text-secondary: var(--ccs-ink-soft) !important;
+
+  /* --- accent family ------------------------------------------------------- */
+  --color-accent: var(--ccs-accent) !important;
+  --codex-theme-accent-color: var(--ccs-accent) !important;
+  --codex-base-accent: var(--ccs-accent) !important;
+  --codex-theme-accent-text: var(--ccs-accent-strong) !important;
+  --codex-theme-accent-icon: var(--ccs-accent-strong) !important;
+  --codex-theme-accent-background-subtle: var(--ccs-accent-soft) !important;
+  --codex-theme-accent-background-hover: var(--ccs-accent-soft-2) !important;
+  --codex-theme-accent-background-pressed: var(--ccs-accent-soft-2) !important;
+  --app-color-background-accent: var(--ccs-accent-soft) !important;
+  --app-color-background-accent-hover: var(--ccs-accent-soft-2) !important;
+  --app-color-text-accent: var(--ccs-accent-strong) !important;
+  --app-color-icon-accent: var(--ccs-accent-strong) !important;
+  --color-text-accent: var(--ccs-accent-strong) !important;
+  --color-text-mode-toggle-accent: var(--ccs-accent-strong) !important;
+  --color-ring-accent: var(--ccs-accent-strong) !important;
+  --app-color-accent-blue: var(--ccs-accent) !important;
+  --color-background-info-solid: var(--ccs-accent) !important;
+  --color-background-info-soft: var(--ccs-accent-soft) !important;
+  --color-background-info-soft-hover: var(--ccs-accent-soft-2) !important;
+  --color-background-info-soft-active: var(--ccs-accent-soft-2) !important;
+  --color-background-info-soft-alpha: color-mix(in srgb, var(--ccs-accent) 13%, transparent) !important;
+  --color-background-info-solid-hover: var(--ccs-accent-strong) !important;
+  --color-text-tip: var(--ccs-accent-strong) !important;
+  --color-text-info-outline: var(--ccs-accent-strong) !important;
+  --color-background-tip-soft: var(--ccs-accent-soft) !important;
+
+  /* "获取 Plus" pill in the Work header: blue text + blue tinted glass. */
+  --app-color-text-tip-badge: var(--ccs-accent-strong) !important;
+  --color-text-header-upgrade: var(--ccs-accent-strong) !important;
+  --color-background-header-upgrade: var(--ccs-accent-soft) !important;
+  --color-background-header-upgrade-hover: var(--ccs-accent-soft-2) !important;
+
+  /* --- product accents that default to blue/purple -------------------------- */
+  --color-button-accent: var(--ccs-accent) !important;
+  --color-button-accent-active: var(--ccs-accent-strong) !important;
+  --color-background-composer-primary: var(--ccs-accent) !important;
+  --color-background-user-message: var(--ccs-accent-soft) !important;
+  --color-text-user-message: var(--ccs-accent-strong) !important;
+  --switch-track-color-checked: var(--ccs-accent) !important;
+  --sidebar-upgrade-glass-ink: var(--ccs-accent-strong) !important;
+  --color-text-composer-reference: var(--ccs-accent-strong) !important;
+  --color-image-generation-accent: var(--ccs-accent) !important;
+  --color-token-on-accent: #ffffff !important;
+  --color-text-on-accent: #ffffff !important;
+}
+
+/* The shell paints a flat 50% white veil over the whole window; drop it so the
+   wallpaper layer below #root becomes visible. */
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) body > #root > div[class*='--app-shell-left-panel-width'] {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Keep app content above the decoration layer without moving fixed elements. */
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) #root {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- sidebar: frosted mint glass ------------------------------------------ */
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) #app-shell-sidebar {
+  background-color: var(--ccs-sidebar) !important;
+  backdrop-filter: blur(9px) saturate(1.06);
+}
+
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) nav[class*='sidebar-rail'] {
+  background-color: var(--ccs-rail) !important;
+}
+
+/* --- chat canvas: floating card ------------------------------------------- */
+/* Only round the conversation canvas while the theme is active. */
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) #root main {
+  border-radius: var(--ccs-radius);
+  /* A per-mille scrim keeps long replies readable without hiding the artwork. */
+  background-color: var(--ccs-reading-surface, color-mix(in srgb, var(--ccs-surface) 96%, transparent)) !important;
+}
+
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"])[data-ccs-focus='on'] {
+  --ccs-reading-surface: rgba(249, 253, 251, 0.98);
+  /* The skin config installs its default palette as inline properties. */
+  --ccs-surface: #f9fdfb !important;
+  --ccs-sidebar: #edf7f1 !important;
+  --ccs-rail: #e6f3ec !important;
+  --ccs-ink: #182b23 !important;
+  --ccs-ink-soft: #4d6257 !important;
+  --ccs-accent: #286b50 !important;
+  --ccs-accent-strong: #205b44 !important;
+}
+
+/* Composer needs more opacity than the reading area so typed text stays crisp. */
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) [class*='ComposerLayoutBody'] {
+  background-color: color-mix(in srgb, var(--ccs-surface) 84%, #ffffff) !important;
+  border-radius: calc(var(--ccs-radius) + 8px);
+}
+
+/* --- focus rings ---------------------------------------------------------- */
+html[data-ccs-skin]:not([data-ccs-pane="on"], [data-ccs-safe="on"]) *:focus-visible {
+  outline-color: var(--ccs-accent-strong);
+}
+
+/* The native browser shares the main renderer's compositor. Return that
+   renderer to its native styles and remove the skin's hit targets while open. */
+html:is([data-ccs-pane="on"], [data-ccs-safe="on"]) :is(#ccs-skin-layers, #ccs-skin-front) {
+  display: none !important;
+}

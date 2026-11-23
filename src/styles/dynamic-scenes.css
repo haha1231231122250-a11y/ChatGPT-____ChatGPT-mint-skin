@@ -1,0 +1,214 @@
+.ccs-bg-motion-status {
+  margin: 8px 2px 2px;
+  font-size: 11px;
+  color: var(--ccs-ink-soft, #4d6257);
+}
+
+.ccs-bg-effects {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  pointer-events: none;
+}
+
+.ccs-bg-effects:not([data-scene]),
+.ccs-bg-effects[data-scene=''],
+.ccs-bg-effects:not([data-playing='true']) .ccs-scene-environment {
+  display: none;
+}
+
+.ccs-scene-environment {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.ccs-scene-environment i {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  animation-delay: var(--phase);
+  animation-iteration-count: infinite;
+}
+
+/* Re-sample the same painting under a feathered mask, with a slight drift
+   around each character. No separate character sprite is composited on top. */
+.ccs-scene-picture {
+  position: absolute;
+  left: var(--scene-anchor, 50%);
+  top: 50%;
+  translate: calc(0% - var(--scene-anchor, 50%)) -50%;
+  width: max(100cqw, 177.7778cqh);
+  height: max(100cqh, 56.25cqw);
+  background-size: 100% 100%;
+}
+
+.ccs-scene-picture::before,
+.ccs-scene-picture::after {
+  content: '';
+  display: none;
+  position: absolute;
+  inset: 0;
+  background-image: inherit;
+  background-size: inherit;
+}
+
+.ccs-bg-effects[data-playing='true'] .ccs-scene-picture::before {
+  display: block;
+  mask-image: radial-gradient(ellipse 22% 42% at var(--astra-x) var(--astra-y), black 33%, transparent 100%);
+  transform-origin: var(--astra-x) var(--astra-y);
+  animation: ccs-portrait-breathe 7.5s ease-in-out infinite;
+}
+
+.ccs-bg-effects[data-playing='true'] .ccs-scene-picture::after {
+  display: block;
+  mask-image: radial-gradient(ellipse 19% 36% at var(--sol-x) var(--sol-y), black 31%, transparent 100%);
+  transform-origin: var(--sol-x) var(--sol-y);
+  animation: ccs-portrait-breathe 6.7s -2s ease-in-out infinite reverse;
+}
+
+@keyframes ccs-portrait-breathe {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  45% { transform: translate(0.18%, -0.32%) rotate(0.36deg); }
+  73% { transform: translate(-0.09%, -0.14%) rotate(-0.19deg); }
+}
+
+/* Garden: a broad light sweep behind two speeds of falling petals and leaves. */
+.ccs-scene-light {
+  display: block;
+  position: absolute;
+  inset: -12%;
+  background: linear-gradient(115deg, transparent 19%, #fff5c975 33%, transparent 52%),
+    linear-gradient(115deg, transparent 41%, #f6ffd76a 56%, transparent 72%);
+  mix-blend-mode: screen;
+  animation: ccs-garden-light 5.3s ease-in-out infinite alternate;
+}
+
+.ccs-scene-environment i[data-effect='leaf'] {
+  width: clamp(14px, 1.9vw, 29px);
+  height: clamp(7px, .85vw, 14px);
+  border-radius: 85% 12% 85% 20%;
+  background: linear-gradient(115deg, #519a68 48%, #a9cf7d 51%);
+  animation-name: ccs-garden-leaf;
+  animation-duration: calc(4.1s * var(--speed));
+  animation-timing-function: linear;
+}
+
+.ccs-scene-environment i[data-effect='petal'] {
+  width: clamp(8px, .9vw, 15px);
+  height: clamp(5px, .6vw, 10px);
+  border-radius: 75% 15% 60% 30%;
+  background: #fff0d5;
+  box-shadow: 1px 1px 2px #ae735b55;
+  animation-name: ccs-garden-petal;
+  animation-duration: calc(5.7s * var(--speed));
+  animation-timing-function: linear;
+}
+
+@keyframes ccs-garden-light {
+  from { transform: translateX(-16%); opacity: .48; }
+  to { transform: translateX(21%); opacity: .88; }
+}
+@keyframes ccs-garden-leaf {
+  0% { transform: translate(-6vw, -15vh) rotate(0); opacity: 0; }
+  13%, 72% { opacity: .88; }
+  54% { transform: translate(12vw, 9vh) rotate(132deg); }
+  100% { transform: translate(20vw, 29vh) rotate(260deg); opacity: 0; }
+}
+@keyframes ccs-garden-petal {
+  0% { transform: translate(-5vw, -10vh) rotate(0); opacity: 0; }
+  18%, 75% { opacity: .92; }
+  100% { transform: translate(13vw, 38vh) rotate(-182deg); opacity: 0; }
+}
+
+/* Rain: fast foreground streaks, distant rain and slow droplets on the glass. */
+.ccs-scene-environment i:is([data-effect='rain-far'], [data-effect='rain-near']) {
+  left: calc(33% + var(--x) * .71);
+  width: 2px;
+  height: 48px;
+  background: linear-gradient(transparent, #f2ffffbd 82%, #e8ffff);
+  animation-name: ccs-rain-streak;
+  animation-duration: calc(1.42s * var(--speed));
+  animation-timing-function: linear;
+}
+
+.ccs-scene-environment i[data-effect='rain-near'] {
+  width: 3px;
+  height: 90px;
+  animation-duration: calc(.9s * var(--speed));
+  filter: drop-shadow(0 0 2px #f2ffff);
+}
+
+.ccs-scene-environment i[data-effect='drop'] {
+  left: calc(55% + var(--x) * .45);
+  width: 5px;
+  height: 12px;
+  border-radius: 100% 100% 65% 65%;
+  border: 1px solid #dafcf5bc;
+  background: linear-gradient(90deg, #f5ffffd1, #5fa9a659 60%, #23565c73);
+  animation-name: ccs-rain-drop;
+  animation-duration: calc(3.1s * var(--speed));
+}
+
+@keyframes ccs-rain-streak {
+  0% { transform: translate(2vw, -24vh) rotate(12deg); opacity: 0; }
+  24%, 80% { opacity: .89; }
+  100% { transform: translate(-9vw, 39vh) rotate(12deg); opacity: 0; }
+}
+@keyframes ccs-rain-drop {
+  0% { transform: translateY(-16vh) scaleY(.7); opacity: 0; }
+  22%, 68% { opacity: .84; }
+  100% { transform: translateY(23vh) scaleY(2); opacity: 0; }
+}
+
+/* Night: firefly groups occupy the air while rings ripple near the water. */
+.ccs-scene-environment i[data-effect='firefly'] {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffc3;
+  box-shadow: 0 0 8px 3px #fff9a4b8, 0 0 29px 9px #e9ff7b68;
+  animation-name: ccs-firefly-travel;
+  animation-duration: calc(3.8s * var(--speed));
+  animation-timing-function: ease-in-out;
+}
+
+.ccs-scene-environment i[data-effect='firefly']:nth-of-type(3n) {
+  --direction: -1;
+  width: 4px;
+  height: 4px;
+  background: #e3ffcf;
+}
+
+.ccs-scene-environment i[data-effect='ripple'] {
+  left: calc(62% + var(--x) * .38);
+  top: max(58%, var(--y));
+  width: clamp(45px, 9vw, 126px);
+  height: 16px;
+  border: 2px solid #e5fff2c7;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #c0ffee93;
+  animation-name: ccs-pond-ripple;
+  animation-duration: calc(2.9s * var(--speed));
+  animation-timing-function: ease-out;
+}
+
+@keyframes ccs-firefly-travel {
+  0%, 100% { transform: translate(calc(-2vw * var(--direction, 1)), 3vh); opacity: .18; }
+  31% { transform: translate(calc(5vw * var(--direction, 1)), -6vh); opacity: .98; }
+  62% { transform: translate(calc(9vw * var(--direction, 1)), -3vh); opacity: .46; }
+  80% { opacity: .91; }
+}
+@keyframes ccs-pond-ripple {
+  0% { transform: scale(.25); opacity: 0; }
+  14% { opacity: .82; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ccs-bg-effects .ccs-scene-environment { display: none; }
+  .ccs-bg-effects[data-playing='true'] .ccs-scene-picture::before,
+  .ccs-bg-effects[data-playing='true'] .ccs-scene-picture::after { display: none; }
+}
+

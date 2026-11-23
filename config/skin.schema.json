@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ChatGPT Mint Skin configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "false unloads the skin and keeps the daemon idle."
+    },
+    "port": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 65535,
+      "default": 9335,
+      "description": "DevTools port used by the start script and the daemon."
+    },
+    "marker": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "default": "mint",
+      "description": "Value of html[data-ccs-skin]; change it when you clone this skin."
+    },
+    "codexBrowser": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The Codex browser pane is a <webview> guest view; these flags keep it rendering normally.",
+      "properties": {
+        "safe": {
+          "type": "boolean",
+          "default": false,
+          "description": "Suspend theme styles and decorations for browser compatibility diagnostics."
+        },
+        "opaqueHost": {
+          "type": "boolean",
+          "default": true,
+          "description": "Legacy setting kept for existing configurations. The browser host uses native styles."
+        }
+      }
+    },
+    "palette": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "surface": { "type": "string", "description": "Chat canvas fill, keep some alpha so the artwork shows." },
+        "sidebar": { "type": "string" },
+        "rail": { "type": "string" },
+        "chrome": { "type": "string", "description": "Top toolbar / title bar fill." },
+        "ink": { "type": "string", "description": "Primary text color." },
+        "inkSoft": { "type": "string" },
+        "border": { "type": "string" },
+        "borderStrong": { "type": "string" },
+        "accent": { "type": "string" },
+        "accentStrong": { "type": "string" },
+        "accentSoft": { "type": "string" },
+        "accentSoft2": { "type": "string" },
+        "radius": { "type": "string" }
+      }
+    },
+    "background": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": ["fixed", "random", "rotate"],
+          "default": "fixed",
+          "description": "fixed uses `asset`; random picks one entry from `list` on every re-inject; rotate cycles `list` every `rotateMs` (runtime, pausable from the picker)."
+        },
+        "rotateMs": {
+          "type": "integer",
+          "minimum": 5000,
+          "maximum": 3600000,
+          "default": 60000,
+          "description": "Dwell time per wallpaper when mode is rotate (milliseconds)."
+        },
+        "picker": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the in-app background panel (thumbnail grid with names + loop switch)."
+        },
+        "list": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Wallpapers in display order; also the rotate sequence and the picker grid."
+        },
+        "asset": { "type": "string", "description": "Path relative to the project root, or absolute." },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "position": { "type": "string", "description": "CSS background-position." }
+      }
+    },
+    "characters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["asset"],
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "layer": { "enum": ["back", "front"], "description": "back keeps text readable; front is a cutout above the UI." },
+          "asset": { "type": "string" },
+          "side": { "enum": ["left", "right"] },
+          "height": { "type": "string", "description": "CSS height, e.g. 58vh." },
+          "offset": { "type": "string", "description": "Inset from the chosen side; negative values pull the cutout off-screen." },
+          "bottom": { "type": "string" },
+          "opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "chibi": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "asset": { "type": "string" },
+        "width": { "type": "string" },
+        "left": { "type": "string" },
+        "bottom": { "type": "string" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "assistant": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Sol, the state-driven desktop assistant in the bottom-right corner.",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "name": { "type": "string" },
+        "mode": {
+          "enum": ["bubble", "pose"],
+          "description": "bubble = standing figure + emote bubble; pose = the emote itself is the character."
+        },
+        "size": { "type": "string", "description": "CSS height of the figure, e.g. 30vh." },
+        "visible": { "type": "boolean", "description": "Initial visibility; the toggle button and localStorage override it at runtime." },
+        "controls": { "type": "boolean", "description": "Show the small eye button that hides/brings back Sol." },
+        "right": { "type": "string" },
+        "bottom": { "type": "string" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "doneMs": { "type": "number", "description": "How long the celebration state lasts." },
+        "smileMs": { "type": "number", "description": "How long the post-reply smile lasts before going idle." },
+        "quiescenceMs": { "type": "number", "description": "Text must stop changing this long to count as finished." },
+        "interactive": {
+          "type": "object",
+          "description": "Local-only interactions (no network, no message content).",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean", "description": "Master switch for the transparent hit area." },
+            "click": { "type": "boolean", "description": "React to clicks with a line and a short emote." },
+            "drag": { "type": "boolean", "description": "Drag Sol anywhere inside the window; position is remembered." },
+            "hover": { "type": "boolean", "description": "Lift / glow while the pointer is over her." },
+            "idle": { "type": "boolean", "description": "Occasional small gestures when the user is away." }
+          }
+        },
+        "captionMs": { "type": "number", "minimum": 500, "maximum": 8000, "description": "How long a spoken line stays on screen." },
+        "idleMs": { "type": "number", "minimum": 10000, "maximum": 600000, "description": "Idle time before Sol starts doing small gestures." },
+        "greet": { "type": "boolean", "description": "Greet once per session based on the local hour." },
+        "lines": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "greet": { "type": "array", "items": { "type": "string" } },
+            "click": { "type": "array", "items": { "type": "string" } },
+            "pet": {
+              "type": "object",
+              "additionalProperties": { "type": "string" },
+              "description": "Milestone pet counts to lines, e.g. { \"3\": \"唔…好痒\" }."
+            }
+          }
+        },
+        "signals": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "sendLabel": { "type": "string" },
+            "stopLabel": { "type": "string" }
+          }
+        },
+        "body": { "type": "string", "description": "Transparent full-body PNG used in bubble mode." },
+        "states": {
+          "type": "object",
+          "description": "Per-state emote + CSS animation name.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["emote"],
+            "properties": {
+              "emote": { "type": "string" },
+              "animation": { "enum": ["breathe", "breathe-fast", "sway", "bounce", "shake"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

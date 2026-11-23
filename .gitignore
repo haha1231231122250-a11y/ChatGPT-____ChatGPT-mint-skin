@@ -1,0 +1,14 @@
+logs/
+shots/
+recon/
+dist/
+node_modules/
+
+# raw art sources (not shipped, large)
+assets/**/*-src.png
+assets/**/sheet-src.png
+assets/app-icon-src.png
+
+# pre-release copies of shortcuts / backups
+*.lnk
+*.lnk.bak-*

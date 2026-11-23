@@ -1,0 +1,10 @@
+{
+  "name": "ChatGPT",
+  "port": 9335,
+  "proxy": "",
+  "launcher": "tools/launch-skin.mjs",
+  "icon": "assets/app-icon.ico",
+  "desktop": true,
+  "startMenu": true,
+  "startup": false
+}
